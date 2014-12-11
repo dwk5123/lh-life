@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<script type="text/javascript">
+			//Constructor - create pre-loaded board
 			function Board(rows, columns) {
 				this.rows = rows;
 				this.columns = columns;
@@ -17,6 +18,7 @@
 
 			var life;
 
+			//Constructor
 			function Life(rows, columns, height, width, ctx, canvas) {
 				this.board = new Board(rows, columns);
 				this.cellHeight = height;
@@ -29,6 +31,7 @@
 				canvas.addEventListener('click', clickHandler);
 			}
 
+			//If a click occurs on the board, attempt to toggle the cell the user clicked on
 			function clickHandler(event) {
 				var rect = b_canvas.getBoundingClientRect();
 				console.log(rect.left + " " + rect.top);
@@ -58,17 +61,17 @@
 						}
 					}
 				}
+				//Finally, update the game's model with the new model
 				game.board = nextBoard;
 			}
 
 			function drawGame() {
-				//this.canvas.clear().renderAll();
 				game.canvas.width = game.canvas.width;
 				rows = game.board.rows;
 				cols = game.board.columns;
 				for (i = 0; i < rows; i++) {
-		
 					for (j = 0; j < cols; j++) {
+						//Draw cell
 						game.canvas.fillStyle = (game.board.cells[i][j] == 0) ? "#FFF" : "#000";
 						game.canvas.fillRect((i * game.cellHeight), (j * game.cellWidth), game.cellWidth-1, game.cellHeight-1);
 					}
@@ -92,7 +95,7 @@
 			var framerate = 0;
 
 			function displayFramerate() {
-				//use "Smoothing"
+				//use simple "Smoothing"
 				framerate = (frames + framerate) / 2;
 				frames = 0;
 				document.getElementById('framerate').innerHTML = framerate;
@@ -135,26 +138,26 @@
 		<canvas height="480" width="640" id='c12'></canvas>
 		<script type="text/javascript">
 			var game;
-			//var canvas = new fabric.Canvas('c12');
 			
+			//Create canvas & drawable context
 			var b_canvas = document.getElementById("c12");
   			var b_context = b_canvas.getContext("2d");
-  			//b_context.fillRect(50, 25, 150, 100);
   
 			function createGame(a, b, c, d) {
-				//game = new Life(a, b, c, d, canvas);
 				game = new Life(a, b, c, d, b_context, b_canvas);
+				//Clear canvas
 				b_context.fillStyle = "#fff";
 				b_context.fillRect(0, 0, 640, 480);
-				//game.draw();
 			}
 			
-			
+			//Create a game with a 10x10 grid of 48x48 pixel cells
 			createGame(10, 10, 48, 48);
 			
+			//Use "asynchronous" methods for separating redrawing and updating logic
 			setInterval(game.draw, 33); //30 fps, approx
 			setInterval(displayFramerate, 1000); //update framerate every second
 			
+			//Allow the user to stop and restart the "autoplay" feature
 			var stepInterval;
 			function startAutoplay() {
 				document.getElementById("autoClick").value = "Stop Autoplay";
